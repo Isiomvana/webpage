@@ -1,8 +1,8 @@
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
 import { GoogleIcon } from '../components/Icons';
+import GoogleAuthModal from '../components/GoogleAuthModal';
 
 const RegisterPage: React.FC = () => {
     const [formData, setFormData] = useState({
@@ -14,6 +14,7 @@ const RegisterPage: React.FC = () => {
     const [error, setError] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [registrationSuccess, setRegistrationSuccess] = useState(false);
+    const [isGoogleAuthModalOpen, setIsGoogleAuthModalOpen] = useState(false);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -54,26 +55,26 @@ const RegisterPage: React.FC = () => {
         }
     };
 
-    const handleGoogleRegister = async () => {
-        console.log('Simulating Google Registration...');
+    const handleGoogleRegisterClick = () => {
         setError('');
-        setIsSubmitting(true);
-        try {
-            // This simulates a successful Google registration flow.
-            const mockUser = await new Promise<{ name: string, email: string }>(resolve => {
-                setTimeout(() => {
-                    resolve({ name: 'Jordan Lee', email: 'jordan.lee@google.com' });
-                }, 500);
-            });
-
-            console.log(`Simulating confirmation email sent to ${mockUser.email}`);
-            setRegistrationSuccess(true);
-        } catch (err) {
-            setError('Google registration failed. Please try again.');
-        } finally {
-            setIsSubmitting(false);
+        if (!agreedToTerms) {
+            setError('You must agree to the Terms of Service and Privacy Policy.');
+            return;
         }
+        setIsSubmitting(true);
+        setIsGoogleAuthModalOpen(true);
     };
+
+    const handleGoogleRegisterSuccess = (mockUser: { name: string, email: string }) => {
+        console.log(`Simulating confirmation email sent to ${mockUser.email}`);
+        setRegistrationSuccess(true);
+    };
+    
+    const handleGoogleAuthClose = () => {
+        setIsGoogleAuthModalOpen(false);
+        setIsSubmitting(false);
+    };
+
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -193,7 +194,7 @@ const RegisterPage: React.FC = () => {
                                 <div className="mt-6">
                                     <button
                                         type="button"
-                                        onClick={handleGoogleRegister}
+                                        onClick={handleGoogleRegisterClick}
                                         disabled={isSubmitting}
                                         className="w-full flex items-center justify-center py-3 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-brand-gray hover:bg-gray-50 transition-colors disabled:opacity-50"
                                     >
@@ -215,6 +216,12 @@ const RegisterPage: React.FC = () => {
                     </div>
                 </div>
             </div>
+            <GoogleAuthModal
+                isOpen={isGoogleAuthModalOpen}
+                onClose={handleGoogleAuthClose}
+                onSuccess={handleGoogleRegisterSuccess}
+                isLogin={false}
+            />
         </div>
     );
 };

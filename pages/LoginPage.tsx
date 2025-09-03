@@ -1,12 +1,9 @@
-
-
-
-// FIX: Import `useState` from 'react' to resolve 'Cannot find name' errors and correct the React import syntax.
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
 import { GoogleIcon } from '../components/Icons';
 import { useAuth } from '../contexts/AuthContext';
+import GoogleAuthModal from '../components/GoogleAuthModal';
 
 const LoginPage: React.FC = () => {
     const [email, setEmail] = useState('');
@@ -16,6 +13,7 @@ const LoginPage: React.FC = () => {
     const { login } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
+    const [isGoogleAuthModalOpen, setIsGoogleAuthModalOpen] = useState(false);
 
     const from = location.state?.from?.pathname || '/book-assessment';
 
@@ -52,27 +50,21 @@ const LoginPage: React.FC = () => {
         }
     };
 
-    const handleGoogleLogin = async () => {
-        console.log('Simulating Google Login...');
+    const handleGoogleLoginClick = () => {
         setError('');
         setIsSubmitting(true);
-        try {
-            // This simulates a successful Google authentication flow.
-            // In a real application, you would use a library like @react-oauth/google
-            // to handle the OAuth2 flow and receive user data from Google.
-            const mockUser = await new Promise<{ name: string, email: string }>(resolve => {
-                setTimeout(() => {
-                    resolve({ name: 'Alex Williams', email: 'alex.williams@google.com' });
-                }, 500);
-            });
-            login(mockUser);
-            handleRedirect();
-        } catch (err) {
-            setError('Google login failed. Please try again.');
-        } finally {
-            setIsSubmitting(false);
-        }
+        setIsGoogleAuthModalOpen(true);
     };
+
+    const handleGoogleLoginSuccess = (mockUser: { name: string, email: string }) => {
+        login(mockUser);
+        handleRedirect();
+    };
+    
+    const handleGoogleAuthClose = () => {
+        setIsGoogleAuthModalOpen(false);
+        setIsSubmitting(false);
+    }
 
     return (
         <div className="bg-brand-light">
@@ -142,7 +134,7 @@ const LoginPage: React.FC = () => {
                         <div className="mt-6">
                             <button
                                 type="button"
-                                onClick={handleGoogleLogin}
+                                onClick={handleGoogleLoginClick}
                                 disabled={isSubmitting}
                                 className="w-full flex items-center justify-center py-3 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-brand-gray hover:bg-gray-50 transition-colors disabled:opacity-50"
                             >
@@ -162,6 +154,12 @@ const LoginPage: React.FC = () => {
                     </div>
                 </div>
             </div>
+            <GoogleAuthModal
+                isOpen={isGoogleAuthModalOpen}
+                onClose={handleGoogleAuthClose}
+                onSuccess={handleGoogleLoginSuccess}
+                isLogin={true}
+            />
         </div>
     );
 };

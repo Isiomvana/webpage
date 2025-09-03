@@ -97,8 +97,8 @@ const BookingPage: React.FC = () => {
         // Simulating a network request to the backend.
         await new Promise(resolve => setTimeout(resolve, 1500));
 
-        // This console log represents the data that would be sent.
-        console.log('Form data sent to backend:', formData);
+        // This console log represents the data that would be sent to an admin.
+        console.log('Simulating sending booking data to admin via email:', formData);
 
         navigate('/confirmation');
       } catch (error) {
