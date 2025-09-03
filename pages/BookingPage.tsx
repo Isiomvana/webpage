@@ -24,6 +24,7 @@ const BookingPage: React.FC = () => {
   });
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [apiError, setApiError] = useState('');
 
   const validate = (): boolean => {
     const newErrors: FormErrors = {};
@@ -80,18 +81,32 @@ const BookingPage: React.FC = () => {
     if (errors[name as keyof FormErrors]) {
         setErrors(prev => ({ ...prev, [name]: undefined }));
     }
+    if (apiError) {
+      setApiError('');
+    }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setApiError('');
     if (validate()) {
       setIsSubmitting(true);
-      // Simulate API call
-      setTimeout(() => {
-        console.log('Form submitted:', formData);
-        setIsSubmitting(false);
+      // In a real application, this is where you would send the form data to a backend server.
+      // The server would then handle sending an email to the administrator.
+      try {
+        // Simulating a network request to the backend.
+        await new Promise(resolve => setTimeout(resolve, 1500));
+
+        // This console log represents the data that would be sent.
+        console.log('Form data sent to backend:', formData);
+
         navigate('/confirmation');
-      }, 1000);
+      } catch (error) {
+        console.error("Submission failed:", error);
+        setApiError("Sorry, there was an error submitting your request. Please try again.");
+      } finally {
+        setIsSubmitting(false);
+      }
     }
   };
 
@@ -152,6 +167,8 @@ const BookingPage: React.FC = () => {
                   Your information is confidential and will not be shared. Submitting this form is a request for an appointment, not a confirmed booking.
                 </p>
               </div>
+
+              {apiError && <div className="text-center text-red-500 text-sm">{apiError}</div>}
 
               <div>
                 <button

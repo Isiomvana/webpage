@@ -1,4 +1,4 @@
-import type { NavLink, Service, Testimonial } from './types';
+import type { NavLink, Service, Testimonial, Faq } from './types';
 import { AssessmentIcon, CommunityIcon, IEPIcon, SupportIcon } from './components/Icons';
 
 export const NAV_LINKS: NavLink[] = [
@@ -47,5 +47,32 @@ export const TESTIMONIALS: Testimonial[] = [
     {
         quote: "Finding a specialist in Nigeria we could trust was overwhelming. Opeyemi's professionalism and warmth put us at ease immediately. We've seen remarkable progress in just a few months.",
         author: "Funke, mother of a 7-year-old"
+    }
+];
+
+export const FAQS: Faq[] = [
+    {
+        question: "What is an Individualized Education Plan (IEP)?",
+        answer: "An IEP is a written document that's developed for each public school child who is eligible for special education. It is created through a team effort and reviewed periodically. The IEP outlines your child's learning needs, the services the school will provide, and how progress will be measured."
+    },
+    {
+        question: "How do I know if my child needs an assessment?",
+        answer: "You might consider an assessment if you notice persistent difficulties with learning, attention, behavior, or social skills compared to their peers. Common signs include trouble with reading or math, difficulty following instructions, hyperactivity, or challenges making friends. An assessment provides a clear picture of your child's strengths and areas where they may need support."
+    },
+    {
+        question: "What age range do you work with?",
+        answer: "We primarily work with children from early years through primary school, typically from ages 3 to 12. However, we can provide consultations for children outside this range. Please contact us to discuss your specific needs."
+    },
+    {
+        question: "Where are your services located?",
+        answer: "Our services are based in Nigeria. We offer both in-person consultations in select areas and virtual sessions to accommodate families across the country. Please get in touch to find out what's available for your location."
+    },
+    {
+        question: "How long does the initial assessment process take?",
+        answer: "The initial assessment is comprehensive. It typically involves an initial consultation with parents, one or two observation sessions with the child, and a feedback meeting. The entire process usually spans over one to two weeks to ensure a thorough and unhurried evaluation."
+    },
+     {
+        question: "How do I book an assessment for my child?",
+        answer: "The first step is to create an account on our website. Once you are logged in, you can access the booking form to request an assessment. We will then contact you to schedule the initial consultation. You can get started by visiting our registration page."
     }
 ];

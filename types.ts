@@ -16,3 +16,8 @@ export interface Testimonial {
   quote: string;
   author: string;
 }
+
+export interface Faq {
+  question: string;
+  answer: string;
+}

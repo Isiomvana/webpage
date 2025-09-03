@@ -1,5 +1,6 @@
 
 
+
 // FIX: Import `useState` from 'react' to resolve 'Cannot find name' errors and correct the React import syntax.
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
@@ -56,15 +57,12 @@ const LoginPage: React.FC = () => {
         setError('');
         setIsSubmitting(true);
         try {
-            // Simulate a Google login that might fail
-             const mockUser = await new Promise<{ name: string, email: string }>((resolve, reject) => {
+            // This simulates a successful Google authentication flow.
+            // In a real application, you would use a library like @react-oauth/google
+            // to handle the OAuth2 flow and receive user data from Google.
+            const mockUser = await new Promise<{ name: string, email: string }>(resolve => {
                 setTimeout(() => {
-                    // Simulate a 50% chance of failure
-                    if (Math.random() > 0.5) {
-                        resolve({ name: 'Google User', email: 'user@google.com' });
-                    } else {
-                        reject(new Error('Simulated Google API error'));
-                    }
+                    resolve({ name: 'Alex Williams', email: 'alex.williams@google.com' });
                 }, 500);
             });
             login(mockUser);

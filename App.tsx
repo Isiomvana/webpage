@@ -17,6 +17,7 @@ import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import ResetPasswordPage from './pages/ResetPasswordPage';
 import TermsOfServicePage from './pages/TermsOfServicePage';
+import FaqPage from './pages/FaqPage';
 
 const App: React.FC = () => {
   return (
@@ -42,6 +43,7 @@ const App: React.FC = () => {
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
               <Route path="/reset-password" element={<ResetPasswordPage />} />
+              <Route path="/faq" element={<FaqPage />} />
             </Routes>
           </main>
           <Footer />
