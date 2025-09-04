@@ -1,8 +1,10 @@
+
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
 import { GoogleIcon } from '../components/Icons';
 import GoogleAuthModal from '../components/GoogleAuthModal';
+import { useAuth } from '../contexts/AuthContext';
 
 const RegisterPage: React.FC = () => {
     const [formData, setFormData] = useState({
@@ -12,9 +14,9 @@ const RegisterPage: React.FC = () => {
     });
     const [agreedToTerms, setAgreedToTerms] = useState(false);
     const [error, setError] = useState('');
-    const [isSubmitting, setIsSubmitting] = useState(false);
     const [registrationSuccess, setRegistrationSuccess] = useState(false);
     const [isGoogleAuthModalOpen, setIsGoogleAuthModalOpen] = useState(false);
+    const { user, loading, setAuthLoading } = useAuth();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -41,7 +43,7 @@ const RegisterPage: React.FC = () => {
             return;
         }
 
-        setIsSubmitting(true);
+        setAuthLoading(true);
         try {
             // Simulate an API call for registration
             await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -51,7 +53,7 @@ const RegisterPage: React.FC = () => {
         } catch (err) {
             setError('Registration failed. Please try again.');
         } finally {
-            setIsSubmitting(false);
+            setAuthLoading(false);
         }
     };
 
@@ -61,7 +63,7 @@ const RegisterPage: React.FC = () => {
             setError('You must agree to the Terms of Service and Privacy Policy.');
             return;
         }
-        setIsSubmitting(true);
+        setAuthLoading(true);
         setIsGoogleAuthModalOpen(true);
     };
 
@@ -72,7 +74,7 @@ const RegisterPage: React.FC = () => {
     
     const handleGoogleAuthClose = () => {
         setIsGoogleAuthModalOpen(false);
-        setIsSubmitting(false);
+        setAuthLoading(false);
     };
 
 
@@ -90,7 +92,15 @@ const RegisterPage: React.FC = () => {
             <div className="py-20">
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="max-w-md mx-auto bg-white p-8 sm:p-12 rounded-lg shadow-lg">
-                        {registrationSuccess ? (
+                        {user ? (
+                            <div className="text-center">
+                                <h2 className="text-2xl font-bold text-brand-blue mb-3">You Already Have an Account</h2>
+                                <p className="text-lg text-brand-gray mb-6">Welcome back, {user.name.split(' ')[0]}! You can proceed to book an assessment.</p>
+                                <Link to="/book-assessment" className="inline-block bg-brand-blue text-white font-semibold py-3 px-8 rounded-full hover:bg-brand-teal transition-all duration-300">
+                                    Go to Booking
+                                </Link>
+                            </div>
+                        ) : registrationSuccess ? (
                             <div className="text-center">
                                 <svg className="w-16 h-16 text-brand-teal mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
                                 <h2 className="text-2xl font-bold text-brand-blue mb-3">Please Confirm Your Email</h2>
@@ -177,10 +187,10 @@ const RegisterPage: React.FC = () => {
                                     <div>
                                         <button
                                             type="submit"
-                                            disabled={isSubmitting}
+                                            disabled={loading}
                                             className="w-full bg-brand-teal text-white font-bold py-3 px-6 rounded-md hover:bg-brand-blue transition-all duration-300 disabled:bg-gray-400"
                                         >
-                                            {isSubmitting ? 'Creating Account...' : 'Register'}
+                                            {loading ? 'Creating Account...' : 'Register'}
                                         </button>
                                     </div>
                                 </form>
@@ -195,7 +205,7 @@ const RegisterPage: React.FC = () => {
                                     <button
                                         type="button"
                                         onClick={handleGoogleRegisterClick}
-                                        disabled={isSubmitting}
+                                        disabled={loading}
                                         className="w-full flex items-center justify-center py-3 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-brand-gray hover:bg-gray-50 transition-colors disabled:opacity-50"
                                     >
                                         <GoogleIcon />
